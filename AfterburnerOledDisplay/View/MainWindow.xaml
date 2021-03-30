@@ -1,0 +1,98 @@
+﻿<Window x:Class="AfterburnerOledDisplay.View.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AfterburnerOledDisplay"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800" Loaded="Window_Loaded" Closing="Window_Closing" ResizeMode="NoResize" IsVisibleChanged="Window_IsVisibleChanged">
+    <DockPanel>
+        <StatusBar DockPanel.Dock="Bottom">
+            <StatusBar.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                    </Grid>
+                </ItemsPanelTemplate>
+            </StatusBar.ItemsPanel>
+            <StatusBarItem>
+                <Label Name="ConnectionStatus">
+                    <Label.Style>
+                        <Style TargetType="Label">
+                            <Setter Property="Content" Value="Disconnected"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsConnected}" Value="true">
+                                    <Setter Property="Content" Value="Connected"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Label.Style>
+                </Label>
+            </StatusBarItem>
+            <Separator Grid.Column="1"/>
+            <StatusBarItem Grid.Column="2">
+                <Label Name="StatusMessage" Content="{Binding StatusMessage}"/>
+            </StatusBarItem>
+        </StatusBar>
+        <GroupBox Header="Settings" DockPanel.Dock="Left" Width="150">
+            <DockPanel LastChildFill="False">
+                <CheckBox Name="AutoConnect" 
+                          Content="Auto connect"
+                          DockPanel.Dock="Top"
+                          IsChecked="{Binding AutoConnect}"/>
+                <CheckBox Name="ShowNotifications" 
+                          Content="Show notifications"
+                          DockPanel.Dock="Top"
+                          IsChecked="{Binding ShowNotifications}"/>
+                <Label Content="Port" DockPanel.Dock="Top"/>
+                <ComboBox Name="PortComboBox" 
+                          DockPanel.Dock="Top"
+                          ItemsSource="{Binding Path=PortList}"
+                          SelectedValue="{Binding SelectedPort}">
+                    <ComboBox.Style>
+                        <Style TargetType="ComboBox">
+                            <Setter Property="IsEnabled" Value="True"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsConnected}" Value="true">
+                                    <Setter Property="IsEnabled" Value="False"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ComboBox.Style>
+                </ComboBox>
+                <Label Content="GPU" DockPanel.Dock="Top"/>
+                <ComboBox Name="GpuComboBox" 
+                          DockPanel.Dock="Top"
+                          ItemsSource="{Binding Path=GPUList}"
+                          DisplayMemberPath="Name"
+                          SelectedValue="{Binding SelectedGPUID}"
+                          SelectedValuePath="GPUID"
+                          IsSynchronizedWithCurrentItem="True"/>
+                <Label Content="Refresh rate" DockPanel.Dock="Top"/>
+                <ComboBox Name="RefreshRateComboBox"
+                          DockPanel.Dock="Top"
+                          ItemsSource="{Binding RefreshRateList}"
+                          SelectedValue="{Binding RefreshRate}"/>
+                <Button DockPanel.Dock="Bottom"
+                        Command="{Binding ConnectCommand}">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Content" Value="Connect"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsConnected}" Value="true">
+                                    <Setter Property="Content" Value="Disconnect"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </DockPanel>
+        </GroupBox>
+        <GroupBox>
+        </GroupBox>
+    </DockPanel>
+</Window>
